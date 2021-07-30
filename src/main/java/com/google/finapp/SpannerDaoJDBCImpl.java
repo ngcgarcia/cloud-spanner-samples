@@ -15,6 +15,7 @@
 package com.google.finapp;
 
 import com.google.cloud.ByteArray;
+import com.google.cloud.Timestamp;
 import com.google.inject.Inject;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -22,6 +23,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Date;
 
 final class SpannerDaoJDBCImpl implements SpannerDaoInterface {
 
@@ -31,7 +33,8 @@ final class SpannerDaoJDBCImpl implements SpannerDaoInterface {
   SpannerDaoJDBCImpl(
       @ArgsModule.SpannerProjectId String spannerProjectId,
       @ArgsModule.SpannerInstanceId String spannerInstanceId,
-      @ArgsModule.SpannerDatabaseId String spannerDatabaseId) {
+      @ArgsModule.SpannerDatabaseId String spannerDatabaseId,
+      @ArgsModule.Port Integer port) {
     String emulatorHost = System.getenv("SPANNER_EMULATOR_HOST");
     if (emulatorHost != null) {
       // connect to emulator
@@ -39,6 +42,11 @@ final class SpannerDaoJDBCImpl implements SpannerDaoInterface {
           String.format(
               "jdbc:cloudspanner://%s/projects/%s/instances/%s/databases/%s;usePlainText=true",
               emulatorHost, spannerProjectId, spannerInstanceId, spannerDatabaseId);
+    } else if (port != null) {
+      this.connectionUrl =
+          String.format(
+              "jdbc:cloudspanner://%s/projects/%s/instances/%s/databases/%s;usePlainText=true",
+              port, spannerProjectId, spannerInstanceId, spannerDatabaseId);
     } else {
       // connect to Cloud Spanner
       this.connectionUrl =
