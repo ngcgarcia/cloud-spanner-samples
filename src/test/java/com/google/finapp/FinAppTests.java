@@ -77,15 +77,15 @@ public class FinAppTests {
   public void createAccountJDBC() throws SpannerDaoException {
     ByteArray accountId = UuidConverter.getBytesFromUuid(UUID.randomUUID());
     Statement.Builder insertBuilder =
-        Statement.newBuilder("INSERT INTO Account "
-                + "(AccountId, AccountType, AccountStatus, Balance, CreationTimestamp) "
-                + "VALUES "
-                + "(?, ?, ?, ?, ?)");
+        Statement.newBuilder("INSERT INTO Account\n"
+                + "(AccountId, AccountType, AccountStatus, Balance, CreationTimestamp)\n"
+                + "VALUES\n"
+                + "(?, ?, ?, ?, PENDING_COMMIT_TIMESTAMP())");
     mockSpanner.putStatementResult(
         StatementResult.update(
             insertBuilder.bind("p1").to(accountId).bind("p2").to(
                0).bind("p3").to(0).bind(
-                        "p4").to(new BigDecimal(2)).bind("p5").to("PENDING_COMMIT_TIMESTAMP()").build(), 1L));
+                        "p4").to(new BigDecimal(2)).build(), 1L));
     JDBCDao.createAccount(
         accountId,
         AccountType.UNSPECIFIED_ACCOUNT_TYPE,

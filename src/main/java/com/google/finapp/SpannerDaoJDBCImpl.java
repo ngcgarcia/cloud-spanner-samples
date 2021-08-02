@@ -45,7 +45,7 @@ final class SpannerDaoJDBCImpl implements SpannerDaoInterface {
     } else if (port != null) {
       this.connectionUrl =
           String.format(
-              "jdbc:cloudspanner://%s/projects/%s/instances/%s/databases/%s;usePlainText=true",
+              "jdbc:cloudspanner://localhost:%s/projects/%s/instances/%s/databases/%s;usePlainText=true",
               port, spannerProjectId, spannerInstanceId, spannerDatabaseId);
     } else {
       // connect to Cloud Spanner
